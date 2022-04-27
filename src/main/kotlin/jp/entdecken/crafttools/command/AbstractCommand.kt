@@ -14,9 +14,11 @@ import org.bukkit.command.defaults.BukkitCommand
  * @param usage 使用方法
  */
 abstract class AbstractCommand(name: String, description: String, usage: String) :
-    BukkitCommand(name, description, usage, ArrayList()) {
-    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>): MutableList<String> {
-        return onTabComplete(sender, alias, args)
+    BukkitCommand(name, description, usage, ArrayList())
+{
+    override fun tabComplete(sender: CommandSender, alias: String, args: Array<out String>): List<String>
+    {
+        return onTabComplete(sender, alias, args).toMutableList()
     }
 
     /**
@@ -31,9 +33,10 @@ abstract class AbstractCommand(name: String, description: String, usage: String)
         sender: CommandSender,
         alias: String,
         args: Array<out String>
-    ): MutableList<String>
+    ): Collection<String>
 
-    override fun execute(sender: CommandSender, commandLabel: String, args: Array<out String>): Boolean {
+    override fun execute(sender: CommandSender, commandLabel: String, args: Array<out String>): Boolean
+    {
         val result: String = onCommand(sender, commandLabel, args) ?: return false
         if (result != "") sender.sendMessage(result)
         return true

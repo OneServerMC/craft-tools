@@ -1,0 +1,5 @@
+name: @name@
+version: @version@
+main: jp.entdecken.crafttools.CraftTools
+api-version: 1.18
+load: STARTUP
