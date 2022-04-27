@@ -2,6 +2,7 @@ package jp.entdecken.crafttools.command
 
 import jp.entdecken.cardinal.command.AbstractCommand
 import jp.entdecken.crafttools.ActionLogs
+import jp.entdecken.crafttools.action.FillSpace
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -38,12 +39,14 @@ class Commands : AbstractCommand("tool", "use tools", "/tool <subcommand>")
         if (sender !is Player) return "this command can send only player"
         val action = ActionLogs.getLatest(sender)
         ActionLogs.rmLatest(sender)
-        return action?.redo() ?: "you don't have log"
+        return action?.redo(sender) ?: "you don't have log"
     }
 
     private fun fillSpace(sender: CommandSender): String
     {
         if (sender !is Player) return "this command can send only player"
-
+        val fillSpace = FillSpace()
+        ActionLogs.addLog(sender, fillSpace)
+        return fillSpace.fillSpace(sender)
     }
 }
