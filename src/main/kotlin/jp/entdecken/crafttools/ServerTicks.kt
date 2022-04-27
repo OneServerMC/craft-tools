@@ -13,9 +13,9 @@ object ServerTicks
         ServerTicks.tickStartedTime = Calendar.getInstance().timeInMillis
     }
 
-    fun isOverMilliSec(milliSec: Long): Boolean
+    fun isOverMaxTick(): Boolean
     {
         val diff: Long = Calendar.getInstance().timeInMillis - tickStartedTime
-        return milliSec < diff
+        return CraftTools.maxTickTime < diff
     }
 }
