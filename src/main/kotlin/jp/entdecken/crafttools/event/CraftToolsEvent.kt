@@ -7,17 +7,14 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
 
-class CraftToolsEvent : Listener
-{
+class CraftToolsEvent : Listener {
     @EventHandler
-    fun tickStart(event: ServerTickStartEvent)
-    {
+    fun tickStart(event: ServerTickStartEvent) {
         ServerTicks.startTick()
     }
 
     @EventHandler
-    fun rmAction(event: PlayerQuitEvent)
-    {
+    fun rmAction(event: PlayerQuitEvent) {
         ActionLogs.rmPlayer(event.player)
     }
 }

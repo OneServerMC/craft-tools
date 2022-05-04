@@ -1,20 +1,16 @@
 package jp.entdecken.crafttools
 
-import java.util.*
+import java.util.Calendar
 
-object ServerTicks
-{
+object ServerTicks {
     var tickStartedTime: Long = 0
         private set
 
-
-    fun startTick()
-    {
+    fun startTick() {
         ServerTicks.tickStartedTime = Calendar.getInstance().timeInMillis
     }
 
-    fun isOverMaxTick(): Boolean
-    {
+    fun isOverMaxTick(): Boolean {
         val diff: Long = Calendar.getInstance().timeInMillis - tickStartedTime
         return CraftTools.maxTickTime < diff
     }

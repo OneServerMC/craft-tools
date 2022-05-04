@@ -12,11 +12,9 @@ import org.bukkit.command.CommandMap
  * @author kigawa
  * @since 2022-4-10
  */
-object CommandManager
-{
+object CommandManager {
     private val commandMap: CommandMap
-        get()
-        {
+        get() {
             val cla = Class.forName(NmsUtil.craftPackage + ".CraftServer")
             val method = cla.getMethod("getCommandMap")
             return method.invoke(Bukkit.getServer()) as CommandMap
@@ -28,8 +26,7 @@ object CommandManager
      * @param strCommand コマンド
      * @param executor
      */
-    fun setExecutor(strCommand: String, executor: CommandExecutor)
-    {
+    fun setExecutor(strCommand: String, executor: CommandExecutor) {
         val command =
             CraftTools.PLUGIN.getCommand(strCommand) ?: throw CommandNotFoundException("you need register command")
         command.setExecutor(executor)
@@ -40,10 +37,9 @@ object CommandManager
      *
      * @param commands 実装するコマンド
      */
-    fun registerCommand(vararg commands: AbstractCommand)
-    {
-        for (command in commands)
-        {
+    fun registerCommand(vararg commands: AbstractCommand) {
+        for (command in commands) {
+            CraftTools.PLUGIN.logger.info("register command ${command.name}")
             commandMap.register(command.name, command)
         }
     }

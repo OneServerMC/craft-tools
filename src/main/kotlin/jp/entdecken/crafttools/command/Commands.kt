@@ -6,12 +6,9 @@ import jp.entdecken.crafttools.action.FillSpace
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class Commands : AbstractCommand("tool", "use tools", "/tool <subcommand>")
-{
-    override fun onTabComplete(sender: CommandSender, alias: String, args: Array<out String>): Collection<String>
-    {
-        return when (args.size)
-        {
+class Commands : AbstractCommand("tools", "use tools", "/tools <subcommand>") {
+    override fun onTabComplete(sender: CommandSender, alias: String, args: Array<out String>): Collection<String> {
+        return when (args.size) {
             1 -> listOf(
                 "fill",
                 "redo"
@@ -20,12 +17,9 @@ class Commands : AbstractCommand("tool", "use tools", "/tool <subcommand>")
         }
     }
 
-    override fun onCommand(sender: CommandSender, commandLabel: String, args: Array<out String>): String?
-    {
-        return when (args.size)
-        {
-            1 -> when (args[0])
-            {
+    override fun onCommand(sender: CommandSender, commandLabel: String, args: Array<out String>): String? {
+        return when (args.size) {
+            1 -> when (args[0]) {
                 "fill" -> fillSpace(sender)
                 "redo" -> redo(sender)
                 else -> null
@@ -34,16 +28,14 @@ class Commands : AbstractCommand("tool", "use tools", "/tool <subcommand>")
         }
     }
 
-    private fun redo(sender: CommandSender): String
-    {
+    private fun redo(sender: CommandSender): String {
         if (sender !is Player) return "this command can send only player"
         val action = ActionLogs.getLatest(sender)
         ActionLogs.rmLatest(sender)
         return action?.redo(sender) ?: "you don't have log"
     }
 
-    private fun fillSpace(sender: CommandSender): String
-    {
+    private fun fillSpace(sender: CommandSender): String {
         if (sender !is Player) return "this command can send only player"
         val fillSpace = FillSpace()
         ActionLogs.addLog(sender, fillSpace)
