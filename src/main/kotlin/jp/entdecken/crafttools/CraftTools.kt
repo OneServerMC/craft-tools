@@ -22,6 +22,7 @@ class CraftTools : JavaPlugin() {
     }
 
     override fun onDisable() {
+        Bukkit.getServer().onlinePlayers.forEach { ActionLogs.rmPlayer(it) }
         logger.info("disabled CraftTools")
     }
 }

@@ -7,44 +7,58 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
-import org.bukkit.scheduler.BukkitTask
 import java.util.LinkedList
 
 class FillSpace : Action() {
-    private lateinit var fillSpaceTask: BukkitTask
     private val blocks: MutableList<Block> = LinkedList()
     private lateinit var material: Material
 
+    companion object {
+        private val blockFaces: Array<BlockFace> = arrayOf(
+            BlockFace.DOWN,
+            BlockFace.EAST,
+            BlockFace.WEST,
+            BlockFace.NORTH,
+            BlockFace.SOUTH
+        )
+    }
+
     fun fillSpace(player: Player): String {
-        if (!fillSpaceTask.isCancelled) {
+        if (task?.isCancelled == true) {
             return "running task now"
         }
         val block = player.location.block.getRelative(BlockFace.DOWN)
         material = block.type
-        blocks.addAll(
-            listOf(
-                block.getRelative(BlockFace.DOWN),
-                block.getRelative(BlockFace.EAST),
-                block.getRelative(BlockFace.NORTH),
-                block.getRelative(BlockFace.SOUTH),
-                block.getRelative(BlockFace.WEST)
-            )
-        )
 
-        fillSpaceTask = Bukkit.getScheduler().runTaskTimer(CraftTools.PLUGIN, Runnable { fillSpaceTask(player) }, 1, 1)
+        blockFaces.forEach { blocks.add(block.getRelative(it)) }
+
+        task = Bukkit.getScheduler().runTaskTimer(
+            CraftTools.PLUGIN,
+            Runnable
+            { fillSpaceTask(player) },
+            1, 1
+        )
         return "fillSpace started"
     }
 
     private fun fillSpaceTask(player: Player) {
         while (!ServerTicks.isOverMaxTick()) {
             if (blocks.isEmpty()) {
-                fillSpaceTask.cancel()
+                task?.cancel()
                 player.sendMessage("redo ended")
                 return
             }
             val block = blocks.first()
-            if (block.isEmpty) setBlock(block, material)
             blocks.removeFirst()
+
+            if (!block.isEmpty) continue
+
+            setBlock(block, material)
+
+            blockFaces.forEach {
+                val relative = block.getRelative(it)
+                if (relative.isEmpty) blocks.add(relative)
+            }
         }
     }
 }

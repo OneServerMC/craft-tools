@@ -11,16 +11,17 @@ import org.bukkit.scheduler.BukkitTask
 
 abstract class Action {
     private val changedBlocks: MutableMap<Block, BlockData> = LinkedHashMap()
-    private lateinit var task: BukkitTask
+    var task: BukkitTask? = null
+        protected set
+
     fun setBlock(block: Block, material: Material) {
         changedBlocks[block] = block.blockData
         block.type = material
     }
 
-    fun redo(player: Player): String {
-        if (!task.isCancelled) {
-            return "running task now"
-        }
+    open fun redo(player: Player): String {
+        task?.cancel()
+
         task = Bukkit.getScheduler().runTaskTimer(CraftTools.PLUGIN, Runnable { redoTask(player) }, 1, 1)
         return "redo started"
     }
@@ -28,7 +29,7 @@ abstract class Action {
     private fun redoTask(player: Player) {
         while (!ServerTicks.isOverMaxTick()) {
             if (changedBlocks.isEmpty()) {
-                task.cancel()
+                task?.cancel()
                 player.sendMessage("redo ended")
                 return
             }

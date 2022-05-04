@@ -3,11 +3,10 @@ package jp.entdecken.crafttools
 import java.util.Calendar
 
 object ServerTicks {
-    var tickStartedTime: Long = 0
-        private set
+    private var tickStartedTime: Long = 0
 
     fun startTick() {
-        ServerTicks.tickStartedTime = Calendar.getInstance().timeInMillis
+        tickStartedTime = Calendar.getInstance().timeInMillis
     }
 
     fun isOverMaxTick(): Boolean {

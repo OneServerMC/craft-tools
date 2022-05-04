@@ -8,6 +8,7 @@ object ActionLogs {
     private val actions: MutableMap<Player, MutableList<Action>> = LinkedHashMap()
 
     fun getLatest(player: Player): Action? {
+        if (actions[player]?.isEmpty() ?: return null) return null
         return actions[player]?.last() ?: return null
     }
 
@@ -16,11 +17,17 @@ object ActionLogs {
     }
 
     fun rmPlayer(player: Player) {
+        actions[player]?.forEach { it.task?.cancel() }
         actions.remove(player)
     }
 
     fun addLog(player: Player, action: Action) {
         val logs: MutableList<Action> = actions[player] ?: LinkedList<Action>()
-        if (logs.size > CraftTools.logSize) logs.removeFirst()
+        logs.add(action)
+        if (logs.size > CraftTools.logSize) {
+            logs.first().task?.cancel()
+            logs.removeFirst()
+        }
+        actions[player] = logs
     }
 }
