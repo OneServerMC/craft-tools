@@ -1,2 +1,5 @@
 /.gradle/
 /.idea/
+/temp/
+/build/
+/libs/paper-1.18.2.jar
